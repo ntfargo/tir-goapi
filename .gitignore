@@ -8,6 +8,7 @@
 *.so
 *.dylib
 tir-apigo
+tir-engine
 
 # Test binary, built with `go test -c`
 *.test
