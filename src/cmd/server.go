@@ -1,3 +1,5 @@
+// server.go
+
 package main
 
 import (
@@ -8,11 +10,6 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/juju/ratelimit"
 	config "github.com/ntfargo/tir-goapi/src/internal/config"
-)
-
-const (
-	apiDocsURL       = "https://documenter.getpostman.com/view/795261/2s9Xy6pUdQ#ee63743c-87e3-471f-8b24-370431aea6b4"
-	requestRateLimit = 10
 )
 
 type serverRunner func(*gin.Engine, string) error
@@ -27,30 +24,13 @@ func setupServerRunner() serverRunner {
 		}
 	}
 	return func(engine *gin.Engine, address string) error {
-		return engine.RunTLS(address, "/path/to/your/cert.pem", "/path/to/your/key.pem")
+		return engine.RunTLS(address, envVariables["CERT"], envVariables["KEY"])
 	}
 }
 
 func main() {
 	port := ":" + config.GetPort()
-	r := gin.Default()
-	limiter := ratelimit.NewBucket(time.Second, 10)
-	r.Use(RequestTimeMiddleware, RateLimiterMiddleware(limiter))
-
-	r.GET("/", func(c *gin.Context) {
-		c.JSON(http.StatusOK, gin.H{
-			"title":   "Welcome to TIR Go API!",
-			"message": "Explore our API and discover its powerful features. Check the documentation for more information.",
-			"docsURL": apiDocsURL,
-		})
-	})
-
-	r.NoRoute(func(c *gin.Context) {
-		c.JSON(http.StatusNotFound, gin.H{
-			"status":  http.StatusNotFound,
-			"message": "404 Not Found",
-		})
-	})
+	r := setupRouter()
 
 	runner := setupServerRunner()
 	if err := runner(r, port); err != nil {
