@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"log"
 	"net/http"
 	"time"
@@ -45,13 +46,31 @@ func RequestTimeMiddleware(c *gin.Context) {
 
 func RateLimiterMiddleware(limiter *ratelimit.Bucket) gin.HandlerFunc {
 	return func(c *gin.Context) {
-		if limiter.TakeAvailable(1) <= 0 {
-			c.JSON(http.StatusTooManyRequests, gin.H{
-				"error": "Too many requests. Please try again later.",
-			})
+		tokensAvailable := limiter.TakeAvailable(1)
+		if tokensAvailable <= 0 {
+			logRateLimitEvent(c)
+			response := buildRateLimitResponse()
+			c.JSON(http.StatusTooManyRequests, response)
 			c.Abort()
 			return
 		}
 		c.Next()
+	}
+}
+
+func logRateLimitEvent(c *gin.Context) {
+	fmt.Printf(
+		"Rate limit hit at %s for IP: %s, route: %s\n",
+		time.Now().Format(time.RFC3339),
+		c.ClientIP(),
+		c.FullPath(),
+	)
+}
+
+func buildRateLimitResponse() gin.H {
+	return gin.H{
+		"error":   "Too many requests",
+		"message": "You have exceeded your request rate. Please try again later.",
+		"code":    http.StatusTooManyRequests,
 	}
 }
