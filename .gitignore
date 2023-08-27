@@ -22,4 +22,7 @@ tir-engine
 # Go workspace file
 go.work
 
+src/tirengine/
+src/tir_grpc.go
+
 *.env
