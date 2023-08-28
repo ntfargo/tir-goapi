@@ -23,7 +23,7 @@ type SimpleValidator struct{}
 type HTTPClient interface {
 	Post(url string, contentType string, body []byte) (*http.Response, error)
 }
-type DefaultHTTPClient struct{}
+type DefaultHTTPClient struct{} 
 
 func (cv ComplexValidator) Validate(password string) (bool, string) {
 	if len(password) < 10 {

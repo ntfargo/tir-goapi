@@ -7,6 +7,8 @@ import (
 	"time"
 
 	"github.com/gin-gonic/gin"
+	"github.com/getsentry/sentry-go"
+	sentrygin "github.com/getsentry/sentry-go/gin"
 	"github.com/juju/ratelimit"
 	config "github.com/ntfargo/tir-goapi/src/internal/config"
 )
@@ -28,11 +30,24 @@ func setupServerRunner() serverRunner {
 }
 
 func main() {
+	err := sentry.Init(sentry.ClientOptions{
+		Dsn: envVariables["DSN"],
+		EnableTracing: true,
+		TracesSampleRate: 1.0,
+	})
+	if err != nil {
+		log.Fatalf("sentry.Init: %s", err)
+	}
+
 	port := ":" + config.GetPort()
 	r := setupRouter()
+	r.Use(sentrygin.New(sentrygin.Options{}))
+
+	defer sentry.Flush(2 * time.Second)
 
 	runner := setupServerRunner()
 	if err := runner(r, port); err != nil {
+		sentry.CaptureException(err)
 		log.Fatalf("Failed to start server: %v", err)
 	}
 }
