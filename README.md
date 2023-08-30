@@ -24,6 +24,10 @@ $ make run # or make build ( MinGW-w64 if you are on Windows )
 # gRPC is running on localhost:50051
 ```
 
+# Similar API Sides
+- [TIR Engine Official API](https://github.com/teamcodeyard/tir-api/tree/master)
+- [TIR Engine Node](https://github.com/FiddlerZsolt/node-tir-api)
+
 # Contributing
 If you'd like to contribute, please follow these simple steps:
 
