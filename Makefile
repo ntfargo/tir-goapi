@@ -18,9 +18,9 @@ extract_rustlib: download_rustlib
 ifeq ($(wildcard $(RUST_LIBRARY_DIR)/*),)
 	@echo "Extracting Rust tir-engine library..."
 ifeq ($(OS),Windows_NT)
-	@PowerShell Expand-Archive -Path .\tir-engine-grpc.zip -DestinationPath .\$(RUST_LIBRARY_DIR) -Force
+	@PowerShell Expand-Archive -Path .\tir-engine.zip -DestinationPath .\$(RUST_LIBRARY_DIR) -Force
 else
-	@unzip -o -d $(RUST_LIBRARY_DIR) tir-engine-grpc.zip
+	@unzip -o -d $(RUST_LIBRARY_DIR) tir-engine.zip
 endif
 else
 	@echo "Rust tir-engine library already extracted."
