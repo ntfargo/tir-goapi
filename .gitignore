@@ -24,5 +24,6 @@ go.work
 
 src/tirengine/
 src/tir_grpc.go
+tir-engine.zip
 
 *.env

@@ -18,6 +18,7 @@ func setupRouter() *gin.Engine {
 	limiter := ratelimit.NewBucket(time.Second, requestRateLimit)
 	r.Use(RequestTimeMiddleware, RateLimiterMiddleware(limiter))
 
+	// main routes
 	r.GET("/", homeHandler)
 	r.NoRoute(notFoundHandler)
 
@@ -36,5 +37,6 @@ func notFoundHandler(c *gin.Context) {
 	c.JSON(http.StatusNotFound, gin.H{
 		"status":  http.StatusNotFound,
 		"message": "404 Not Found",
+		"request": c.Request.URL.Path,
 	})
 }
