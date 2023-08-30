@@ -2,7 +2,7 @@
 
 <img src='assets/tir_git_cover.png' >
 
-### ⚠️ This repository is currently under active development and is not stable for production use. ⚠️
+### ⚠️ This repository is currently under development and is not stable for production use. ⚠️
 
 ## Introduction
 
