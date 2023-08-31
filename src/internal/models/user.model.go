@@ -1,4 +1,4 @@
-package models 
+package models
 
 type User struct {
 	Email    string `json:"email"`
@@ -7,4 +7,9 @@ type User struct {
 	FullName string `json:"fullName"`
 	APIKey   string `json:"apiKey"`
 	Role     string `json:"role"`
+}
+
+type AuthCredentials struct {
+	Email    string `json:"email"`
+	Password string `json:"password"`
 }
