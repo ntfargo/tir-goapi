@@ -9,8 +9,7 @@ import (
 func RegisterUser(c *gin.Context) {
 	var user models.User
 	if err := c.BindJSON(&user); err != nil {
-		w := c.Writer
-		others.ErrorHandler(err, w)
+		others.ErrorHandler(others.ErrInvalidInput, c.Writer, c.Request)
 		return
 	}
 }

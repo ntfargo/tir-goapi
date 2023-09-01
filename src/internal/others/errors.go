@@ -39,8 +39,8 @@ func IsInternal(err error) bool {
 }
 
 func WriteErrorResponse(w http.ResponseWriter, code int, errType, message string) {
-	w.WriteHeader(code)
 	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(code)
 	response := ErrorResponse{
 		Code:    code,
 		Type:    errType,
@@ -49,7 +49,7 @@ func WriteErrorResponse(w http.ResponseWriter, code int, errType, message string
 	json.NewEncoder(w).Encode(response)
 }
 
-func ErrorHandler(err error, w http.ResponseWriter) {
+func ErrorHandler(err error, w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 
 	switch {

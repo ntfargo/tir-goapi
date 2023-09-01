@@ -24,7 +24,7 @@ func TestErrorHandler(t *testing.T) {
 
 	for _, tt := range tests {
 		w := httptest.NewRecorder()
-		others.ErrorHandler(tt.err, w)
+		others.ErrorHandler(tt.err, w, httptest.NewRequest("GET", "/", nil))
 		resp := w.Result()
 		if resp.StatusCode != tt.expected {
 			t.Errorf("for error %v, expected status %v but got %v", tt.err, tt.expected, resp.StatusCode)
