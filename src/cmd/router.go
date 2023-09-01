@@ -6,6 +6,7 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/juju/ratelimit"
+	"github.com/ntfargo/tir-goapi/src/internal/controller"
 )
 
 const (
@@ -21,6 +22,9 @@ func setupRouter() *gin.Engine {
 	// main routes
 	r.GET("/", homeHandler)
 	r.NoRoute(notFoundHandler)
+
+	// user routes
+	r.POST("/users", controller.RegisterUser)
 
 	return r
 }

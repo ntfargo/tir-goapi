@@ -1,9 +1,16 @@
 package others
 
 import (
+	"encoding/json"
 	"errors"
 	"net/http"
 )
+
+type ErrorResponse struct {
+	Code    int    `json:"code"`
+	Type    string `json:"type"`
+	Message string `json:"message"`
+}
 
 var (
 	ErrNotFound                = errors.New("not found")
@@ -31,19 +38,30 @@ func IsInternal(err error) bool {
 	return errors.Is(err, ErrInternal)
 }
 
+func WriteErrorResponse(w http.ResponseWriter, code int, errType, message string) {
+	w.WriteHeader(code)
+	w.Header().Set("Content-Type", "application/json")
+	response := ErrorResponse{
+		Code:    code,
+		Type:    errType,
+		Message: message,
+	}
+	json.NewEncoder(w).Encode(response)
+}
+
 func ErrorHandler(err error, w http.ResponseWriter) {
+	w.Header().Set("Content-Type", "application/json")
+
 	switch {
 	case IsNotFound(err):
-		w.WriteHeader(http.StatusNotFound)
+		WriteErrorResponse(w, http.StatusNotFound, "NOT_FOUND", "Service not found")
 	case IsUnauthorized(err):
-		w.WriteHeader(http.StatusUnauthorized)
+		WriteErrorResponse(w, http.StatusUnauthorized, "UNAUTHORIZED", "Missing x-access-token header variable")
 	case IsInvalidInput(err):
-		w.WriteHeader(http.StatusBadRequest)
+		WriteErrorResponse(w, http.StatusBadRequest, "BAD_REQUEST", err.Error())
 	case IsInternal(err):
-		w.WriteHeader(http.StatusInternalServerError)
+		WriteErrorResponse(w, http.StatusInternalServerError, "INTERNAL_ERROR", "An internal error occurred")
 	default:
-		w.WriteHeader(http.StatusInternalServerError)
+		WriteErrorResponse(w, http.StatusInternalServerError, "INTERNAL_ERROR", err.Error())
 	}
-
-	w.Write([]byte(err.Error()))
 }

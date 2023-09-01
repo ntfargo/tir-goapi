@@ -23,7 +23,7 @@ type SimpleValidator struct{}
 type HTTPClient interface {
 	Post(url string, contentType string, body []byte) (*http.Response, error)
 }
-type DefaultHTTPClient struct{} 
+type DefaultHTTPClient struct{}
 
 func (cv ComplexValidator) Validate(password string) (bool, string) {
 	if len(password) < 10 {
@@ -109,4 +109,12 @@ func generateAPIKey() (string, error) {
 		return "", err
 	}
 	return base64.StdEncoding.EncodeToString(keyBytes), nil
+}
+
+func GenerateJWTSecretKey() (string, error) {
+	key := make([]byte, 32) // 256 bits
+	if _, err := rand.Read(key); err != nil {
+		return "", err
+	}
+	return base64.URLEncoding.EncodeToString(key), nil
 }

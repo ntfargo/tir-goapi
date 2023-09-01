@@ -13,7 +13,12 @@ TIR Project is an Open-Source AI-based community educational platform. This proj
 - [TIR Engine](https://github.com/teamcodeyard/tir-engine)
 - [TIR API](https://github.com/teamcodeyard/tir-api)
 - [TIR Discord Bot?](https://github.com/teamcodeyard/tir-discord)
- 
+
+# Requirements
+- [Go](https://golang.org/)
+- [PostgreSQL](https://www.postgresql.org/)
+- [Protocol Buffers](https://developers.google.com/protocol-buffers)
+
 # Installation
 ```bash
 $ git clone git@github.com:ntfargo/tir-goapi.git

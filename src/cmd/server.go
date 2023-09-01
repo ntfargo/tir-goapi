@@ -6,9 +6,9 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/gin-gonic/gin"
 	"github.com/getsentry/sentry-go"
 	sentrygin "github.com/getsentry/sentry-go/gin"
+	"github.com/gin-gonic/gin"
 	"github.com/juju/ratelimit"
 	config "github.com/ntfargo/tir-goapi/src/internal/config"
 )
@@ -31,8 +31,8 @@ func setupServerRunner() serverRunner {
 
 func main() {
 	err := sentry.Init(sentry.ClientOptions{
-		Dsn: envVariables["DSN"],
-		EnableTracing: true,
+		Dsn:              envVariables["DSN"],
+		EnableTracing:    true,
 		TracesSampleRate: 1.0,
 	})
 	if err != nil {
