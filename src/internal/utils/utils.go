@@ -24,6 +24,8 @@ type HTTPClient interface {
 	Post(url string, contentType string, body []byte) (*http.Response, error)
 }
 type DefaultHTTPClient struct{}
+type BcryptHasher struct{}
+type RandomAPIKeyGenerator struct{}
 
 func (cv ComplexValidator) Validate(password string) (bool, string) {
 	if len(password) < 10 {
@@ -43,11 +45,11 @@ func (cv ComplexValidator) Validate(password string) (bool, string) {
 	return true, ""
 }
 
-func (sv SimpleValidator) Validate(email string) (bool, string) {
+func (v SimpleValidator) Validate(email string) (bool, error) {
 	if !regexp.MustCompile(`^[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,}$`).MatchString(email) {
-		return false, "Invalid email address."
+		return false, errors.New("Invalid email address")
 	}
-	return true, ""
+	return true, nil
 }
 
 func (c DefaultHTTPClient) Post(url string, contentType string, body []byte) (*http.Response, error) {
@@ -94,7 +96,7 @@ func RespondWithError(w http.ResponseWriter, code int, message string) {
 	RespondWithJSON(w, code, map[string]string{"error": message})
 }
 
-func hashPassword(password string) (string, error) {
+func (b BcryptHasher) Hash(password string) (string, error) {
 	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
 	if err != nil {
 		return "", err
@@ -102,7 +104,7 @@ func hashPassword(password string) (string, error) {
 	return string(hashedPassword), nil
 }
 
-func generateAPIKey() (string, error) {
+func (r RandomAPIKeyGenerator) Generate() (string, error) {
 	keyBytes := make([]byte, 32)
 	_, err := rand.Read(keyBytes)
 	if err != nil {

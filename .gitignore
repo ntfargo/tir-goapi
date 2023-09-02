@@ -25,5 +25,6 @@ go.work
 src/tirengine/
 src/tir_grpc.go
 tir-engine.zip
+.vscode/
 
 *.env

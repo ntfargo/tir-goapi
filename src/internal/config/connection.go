@@ -100,6 +100,10 @@ func (db *Database) BeginTransaction() (*sql.Tx, error) {
 	return tx, nil
 }
 
+func (db *Database) GetConnection() *sql.DB {
+	return db.conn
+}
+
 func (db *Database) Close() {
 	if err := db.conn.Close(); err != nil {
 		log.Printf("Error closing the database connection: %v", err)
