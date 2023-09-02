@@ -27,6 +27,10 @@ $ make run # or make build ( MinGW-w64 if you are on Windows )
 
 # Servers are running on {ProtocolType}://localhost:5211
 # gRPC is running on localhost:50051
+
+# Generate protoc files
+$ cd tir-engine/proto
+$ protoc --go_out=. --go_opt=paths=source_relative --go-grpc_out=. --go-grpc_opt=paths=source_relative proto/tir.proto
 ```
 
 # Similar API Sides
