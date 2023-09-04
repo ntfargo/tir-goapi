@@ -3,7 +3,7 @@ GO_COMPILER := go
 SOURCE_DIR := ./src
 COMMAND_DIR := $(SOURCE_DIR)/cmd
 GO_SOURCE_FILES := $(wildcard $(COMMAND_DIR)/*.go)
-RUST_ZIP_URL := https://cdn.linearfox.com/git/tir-engine.zip?v=3
+RUST_ZIP_URL := https://cdn.linearfox.com/git/tir-engine.zip?v=4 # Modified tir-engine & tir-engine-grpc for tir-goapi
 RUST_LIBRARY_DIR := ./tir-engine
 PROTO_DIR := ./tir-engine/proto
 PROTO_GO_FILES := $(PROTO_DIR)/tir.pb.go $(PROTO_DIR)/tir_grpc.pb.go
