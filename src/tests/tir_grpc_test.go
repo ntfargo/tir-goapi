@@ -2,29 +2,28 @@ package tests
 
 import (
 	"context"
-	"log"
+	"testing"
 	"time"
 
-	tirengine "github.com/ntfargo/tir-goapi/src/tirengine" // generated from tir.proto
+	tir "github.com/ntfargo/tir-goapi/src/tir-engine/proto" // generated from tir.proto
 	"google.golang.org/grpc"
+	"google.golang.org/grpc/credentials"
 )
 
-func main() {
-	conn, err := grpc.Dial("localhost:50051", grpc.WithInsecure(), grpc.WithBlock())
+func TestGenerateKnowledge(t *testing.T) {
+	conn, err := grpc.Dial("localhost:50051", grpc.WithTransportCredentials(credentials.NewClientTLSFromCert(nil, "")))
 	if err != nil {
-		log.Fatalf("Failed to connect to server: %v", err)
+		t.Fatalf("Failed to connect to server: %v", err)
 	}
 	defer conn.Close()
 
-	client := tirengine.NewTirServiceClient(conn)
+	client := tir.NewTirServiceClient(conn)
 
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
 
-	_, err = client.GenerateKnowledge(ctx, &tirengine.EmptyRequest{})
+	_, err = client.GenerateKnowledge(ctx, &tir.GenerateKnowledgeRequest{})
 	if err != nil {
-		log.Fatalf("Failed to call GenerateKnowledge at %s: %v", err)
-	} else {
-		log.Printf("Called GenerateKnowledge successfully at %s!")
+		t.Fatalf("Failed to call GenerateKnowledge: %v", err)
 	}
 }

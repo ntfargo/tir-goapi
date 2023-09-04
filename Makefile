@@ -3,8 +3,10 @@ GO_COMPILER := go
 SOURCE_DIR := ./src
 COMMAND_DIR := $(SOURCE_DIR)/cmd
 GO_SOURCE_FILES := $(wildcard $(COMMAND_DIR)/*.go)
-RUST_ZIP_URL := https://cdn.linearfox.com/git/tir-engine.zip
+RUST_ZIP_URL := https://cdn.linearfox.com/git/tir-engine.zip?v=3
 RUST_LIBRARY_DIR := ./tir-engine
+PROTO_DIR := ./tir-engine/proto
+PROTO_GO_FILES := $(PROTO_DIR)/tir.pb.go $(PROTO_DIR)/tir_grpc.pb.go
 
 .PHONY: all build run clean download_rustlib extract_rustlib rustlib
 
@@ -28,9 +30,12 @@ endif
 
 rustlib: extract_rustlib
 	@echo "Building Rust tir-engine library..."
-	@cd $(RUST_LIBRARY_DIR) && cargo build --release
+	@cd $(RUST_LIBRARY_DIR) && cargo build --release 
 
 build: rustlib
+	@echo "Generating proto go files..."
+	@protoc --go_out=$(SOURCE_DIR) --go_opt=paths=source_relative --go-grpc_out=$(SOURCE_DIR) --go-grpc_opt=paths=source_relative $(PROTO_DIR)/tir.proto
+	@echo "Proto go files generated successfully."
 	@echo "Building $(BINARY_NAME)..."
 	@cd $(COMMAND_DIR) && $(GO_COMPILER) build -o ../../$(BINARY_NAME)
 	@echo "$(BINARY_NAME) build complete"
