@@ -34,13 +34,13 @@ func CreateUser(user User) (int64, error) {
 	conn := db.GetConnection()
 
 	query := `
-		INSERT INTO users (email, password, bio, fullName, apiKey, role)
-		VALUES ($1, $2, $3, $4, $5, $6)
-		RETURNING id
-	`
+        INSERT INTO users (email, password, bio, full_name, api_key, role)
+        VALUES ($1, $2, $3, $4, $5, $6)
+        RETURNING id
+    `
 
 	var userID int64
-	err = conn.QueryRow(query, user.Email, user.Password, user.Bio, user.FullName, user.APIKey, user.Role).Scan(&userID)
+	err = conn.QueryRow(query, user.Email, user.Password, user.Bio, user.FullName, user.APIKey, "MEMBER").Scan(&userID) // MEMBER is the default role
 	if err != nil {
 		return 0, ErrCreateUser
 	}
